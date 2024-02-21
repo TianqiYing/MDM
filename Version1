@@ -1,0 +1,80 @@
+def Rectangle(length, height):
+    up()
+    right(180)
+    forward(length*10/2)
+    left(90)
+    forward(height*10/2)
+    pendown()
+    for x in range(2):
+        left(90)
+        forward(length*10)
+        left(90)
+        forward(height*10)
+    up()
+    left(90)
+def Vertical_Cuts(Distance, Length):
+    up()
+    fd(Distance*10)
+    left(90)
+    down()
+    fd(Length*10)
+    up()
+    bk(Length*10)
+    right(90)
+X = int(input('Enter the value of X:'))
+Y = int(input('Enter the value of Y:'))
+Area = X * Y
+L1 = int(input('Enter the length of the 1st glass panel: '))
+L2 = int(input('Enter the length of the 2nd glass panel: '))
+H = int(input('Enter the height of the glass panels: '))
+N1 = int(input('Enter the number of glass panels: '))
+N2 = int(input('Enter the number of glass panels: '))
+Area1 = L1 * H * N1
+Area2 = L2 * H * N2
+Run_Flag = True
+if Run_Flag:
+    if Area < Area1 + Area2:
+        print('Error: Not enough panel')
+        Run_Flag = False
+    else:
+        print('Enough Area')
+largest = 0
+panel = ''
+if Run_Flag:
+    if H > L1:
+        P1 = [H, L1]
+    else:
+        P1 = [L1, H]
+    P1_Count = N1
+    if H > L2:
+        P2 = [H, L2]
+    else:
+        P2 = [L2, H]
+    P2_Count = N2
+    if P1[0] < P2[0]:
+        temp = P1
+        P1 = P2
+        P2 = temp
+    L = 0
+    R_Flag = True
+    Cuts = []
+    while R_Flag:
+        if P1[0] < X - L:
+            L += P1[0]
+            Cuts.append(P1[0])
+        elif P2[0] < X - L < P1[0]:
+            L += P2[0]
+            Cuts.append(P2[0])
+        elif P2[1] < X - L < P1[0]:
+            L += P2[1]
+            Cuts.append(P2[1])
+        else:
+            R_Flag = False
+    Rectangle(X, Y)
+    goto(-(X*10)/2, -(Y*10)/2)
+    for n in Cuts:
+        color('red')
+        Vertical_Cuts(n, Y)
+x = 0
+while x == 0:
+  fd(0)
