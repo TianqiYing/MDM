@@ -1,0 +1,149 @@
+from turtle import *
+def Rectangle(length, height):
+    up()
+    right(180)
+    forward(length*10/2)
+    left(90)
+    forward(height*10/2)
+    pendown()
+    for x in range(2):
+        left(90)
+        forward(length*10)
+        left(90)
+        forward(height*10)
+    up()
+    left(90)
+def Vertical_Cuts(Distance, Length):
+    up()
+    fd(Distance*10)
+    left(90)
+    down()
+    fd(Length*10)
+    up()
+    bk(Length*10)
+    right(90)
+X = int(input('Enter the value of X:'))
+Y = int(input('Enter the value of Y:'))
+Area = X * Y
+L1 = int(input('Enter the length of the 1st glass panel: '))
+L2 = int(input('Enter the length of the 2nd glass panel: '))
+H = int(input('Enter the height of the glass panels: '))
+N1 = int(input('Enter the number of glass panels: '))
+N2 = int(input('Enter the number of glass panels: '))
+Area1 = L1 * H * N1
+Area2 = L2 * H * N2
+Run_Flag = True
+if Run_Flag:
+    if Area < Area1 + Area2:
+        print('Error: Not enough panel')
+        Run_Flag = False
+    else:
+        print('Enough Area')
+largest = 0
+panel = ''
+if Run_Flag:
+    if H > L1:
+        P1 = [H, L1]
+    else:
+        P1 = [L1, H]
+    if L2 > H:
+        P2 = [H, L2]
+    else:
+        P2 = [L2, H]
+    P2_Total = N2
+    if P1[0] < P2[0]:
+        temp1 = P1
+        temp2 = N1
+        P1 = P2
+        N1 = N2
+        P2 = temp1
+        P2_Total = temp2
+    L = 0
+    P1_Count = 0
+    P1_Cuts = Y // P1[1]
+    P1_Vertical_Cuts = 0
+    P2_Count = 0
+    P2_Vertical_Cuts = 0
+    R_Flag = True
+    Vertical_Distance = []
+    L2_Flag = True
+    H_Flag = True
+    while R_Flag:
+        R_Flag = False
+        if P1[0] <= X - L and P1_Count < N1:
+            R_Flag = True
+            L += P1[0]
+            P1_Vertical_Cuts += 1
+            Vertical_Distance.append(P1[0])
+            P1_Count += P1_Cuts
+        if P2[0] <= X - L and P2_Count < P2_Total and P1_Count >= N1 and L2_Flag:
+            H_Flag = False
+            R_Flag = True
+            L += P2[0]
+            P2_Vertical_Cuts += 1
+            Vertical_Distance.append(P2[0])
+            P2_Cuts = Y // P2[1]
+            P2_Count += P2_Cuts
+        elif P2[1] <= X - L < P2[0] and P2_Count < P2_Total and P1_Count >= N1 and H_Flag:
+            L2_Flag = False
+            R_Flag = True
+            L += P2[1]
+            P2_Vertical_Cuts += 1
+            Vertical_Distance.append(P2[1])
+            P2_Cuts = Y // P2[0]
+            P2_Count += P2_Cuts
+    print('Remain Length:', X - L)
+Cuts = 0
+Waste_panel = 0
+Used_Panel_Area = 0
+if Run_Flag:
+    color('black')
+    Rectangle(X, Y)
+    Vertical_Total = 0
+    for d in Vertical_Distance: # make sure it doesn't cut over the edge
+        Vertical_Total += d
+        if Vertical_Total != X:
+            color('red')
+            Vertical_Cuts(d, Y)
+            Cuts += 1
+    if X - L > 0:
+        Waste_panel += 1
+    goto(-X * 10 / 2, -Y * 10 / 2)
+    for h in range(P1_Cuts):
+        color('red')
+        if ((h + 1) * P1[1]) == Y:
+            break
+        else:
+            Cuts += 1
+    if Y % P1[1] != 0:
+        Waste_panel += 1
+    Waste_panel += P1_Vertical_Cuts * P1_Cuts - N1  # Should be greater than or equal to  0
+    if P1_Count < N1:
+        Used_Panel_Area += P1_Count * P1[0] * P1[1]
+    else:
+        Used_Panel_Area += N1 * P1[0] * P1[1]
+    goto(-X * 10 / 2 - P1[0] * 10 * P1_Vertical_Cuts, -Y * 10 / 2)
+    for h in range(P2_Cuts):
+        color('red')
+        if L2_Flag:
+            if ((h + 1) * P2[1]) == Y:
+                break
+            else:
+                Cuts += 1
+        elif H_Flag:
+            if ((h + 1) * P2[1]) == Y:
+                break
+            else:
+                Cuts += 1
+    if Y % P2[1] != 0:
+        Waste_panel += 1
+    Waste_panel += P2_Vertical_Cuts * P2_Cuts - P2_Total
+    if P2_Count < P2_Total:
+        Used_Panel_Area += P2_Count * P2[0] * P2[1]
+    else:
+        Used_Panel_Area += P2_Total * P2[0] * P2[1]
+    print('There were', Cuts, 'cuts performed and', Waste_panel, 'separate panels wasted')
+    print('The percentage waste of the panel is', (Area - Used_Panel_Area) / Area * 100, '%')
+x = 0
+while x == 0:
+    fd(0)
