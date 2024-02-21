@@ -1,3 +1,4 @@
+from turtle import *
 def Rectangle(length, height):
     up()
     right(180)
